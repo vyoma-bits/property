@@ -1,8 +1,14 @@
 from django.db import models
 
-class Property(models.Model):
-    name = models.CharField(max_length=255)
-    # Other property fields...
-    google_location = models.CharField(max_length=255, blank=True)  # Optional location string
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)  # Latitude
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)  # Longitude
+class Location(models.Model):
+    location = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    parcel_size = models.CharField(max_length=255)
+    price_per_acre = models.CharField(max_length=255)
+    micro_market = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    photo = models.ImageField(upload_to='photos/', null=True, blank=True)
+
+    def __str__(self):
+        return self.location

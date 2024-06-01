@@ -4,48 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Maps Test</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApzJqEbnR283RJ-My5hO5zGRfqw1gpABw&libraries=places"></script>
     <style>
         #map {
             height: 400px;
             width: 100%;
+        }
+        #place-photo {
+            display: none;
+            margin-top: 20px;
+            max-width: 400px;
+            max-height: 300px;
         }
     </style>
 </head>
 <body>
     <h1>Google Maps Test</h1>
    
-    <form action="{% url 'store_info' %}" method="post">
+    <form method="post">
         {% csrf_token %}
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location">
-        <input type="hidden" id="latitude" name="latitude">
-        <input type="hidden" id="longitude" name="longitude">
+        {{ form.as_p }}
+
         <div id="map"></div>
+        <img id="place-photo" src="" alt="Place Photo">
         <button type="submit">Submit</button>
     </form>
     
-<script>
-    function initMap() {
-        var mapOptions = {
-            center: { lat: -34.397, lng: 150.644 },
-            zoom: 8
-        };
-        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-        var input = document.getElementById('location');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-    
-        autocomplete.addListener('place_changed', function () {
-            var place = autocomplete.getPlace();
-            if (!place.geometry) {
-                window.alert("No details available for input: '" + place.name + "'");
-                return;
-            }
-            document.getElementById('latitude').value = place.geometry.location.lat();
-            document.getElementById('longitude').value = place.geometry.location.lng();
-        });
-    }
-</script>
+    <script>
+        function initMap() {
+            var mapOptions = {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8
+            };
+            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+            var input = document.getElementById('id_location');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+        
+            autocomplete.addListener('place_changed', function () {
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+                document.getElementById('id_latitude').value = place.geometry.location.lat();
+                document.getElementById('id_longitude').value = place.geometry.location.lng();
+
+                if (place.photos && place.photos.length > 0) {
+                    var photoUrl = place.photos[0].getUrl({maxWidth: 400, maxHeight: 300});
+                    document.getElementById('id_photo_url').value = photoUrl;
+                    document.getElementById('place-photo').src = photoUrl;
+                    document.getElementById('place-photo').style.display = 'block';
+                } else {
+                    document.getElementById('id_photo_url').value = '';
+                    document.getElementById('place-photo').style.display = 'none';
+                }
+            });
+        }
+    </script>
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApzJqEbnR283RJ-My5hO5zGRfqw1gpABw&callback=initMap&libraries=places"></script>
 </body>
