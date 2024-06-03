@@ -32,7 +32,7 @@ def store_info(request):
     else:
         form = LocationForm()
     
-    return render(request, 'input/index.html', {'form': form})
+    return render(request, 'input/main.html', {'form': form})
 def success(request):
     return render(request,"input/success.html")
 def add_marker(request):
@@ -50,3 +50,5 @@ def add_marker(request):
         } for loc in locations
     ])
     return render(request,"input/index2.html",{'location':locations_data})
+def datables(request):
+    return render(request,"input/datatables.html")

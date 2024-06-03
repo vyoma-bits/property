@@ -1,0 +1,70 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{%block content %}
+<div class="d-flex">
+    {%include 'layouts/sidebar.html'%}
+    <div class="w-100">{%include 'layouts/header.html'%}
+   <div class="my-3 mx-3">
+    DASHBAORD
+    <div class="d-flex">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Availabilty</h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div>
+          </div>
+    
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Inventory</h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div>
+          </div>
+    
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Sales Past Year</h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div>
+            </div>
+    
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Demand</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="card-link">Card link</a>
+                  <a href="#" class="card-link">Another link</a>
+                </div>
+                </div>
+            
+
+    </div>
+    
+          </div>
+          <!-- Adding datatable-->
+          <div>
+            <table id="mytable"></table>
+          </div>
+
+      </div>
+   </div>
+
+   
+
+
+</div>
+</div>
+{%endblock content%}
+{%block scripts%}
+<script src="{% static '/assests/js/index.js' %}"
+{%endblock scripts%}
