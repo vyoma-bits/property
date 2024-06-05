@@ -3,23 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Maps Test</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApzJqEbnR283RJ-My5hO5zGRfqw1gpABw&libraries=places"></script>
+    <title>ADD PROPERTY</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
         #map {
-            height: 400px;
+            height: 200px;
             width: 100%;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
         #place-photo {
-            display: none;
-            margin-top: 20px;
-            max-width: 400px;
-            max-height: 300px;
+    display: none; /* Hide the image by default */
+    margin-top: 20px;
+    max-width: 400px;
+    max-height: 300px;
+}
+        button {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1>Google Maps Test</h1>
+    <h1>ADD PROPERTY</h1>
    
     <form method="post">
         {% csrf_token %}
@@ -31,14 +65,22 @@
     </form>
     
     <script>
+        var map;
+        var marker;
+        
         function initMap() {
             var mapOptions = {
                 center: { lat: -34.397, lng: 150.644 },
                 zoom: 8
             };
-            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+            map = new google.maps.Map(document.getElementById("map"), mapOptions);
             var input = document.getElementById('id_location');
             var autocomplete = new google.maps.places.Autocomplete(input);
+
+            marker = new google.maps.Marker({
+                map: map,
+                visible: false // Hide the marker initially
+            });
         
             autocomplete.addListener('place_changed', function () {
                 var place = autocomplete.getPlace();
@@ -58,6 +100,10 @@
                     document.getElementById('id_photo_url').value = '';
                     document.getElementById('place-photo').style.display = 'none';
                 }
+
+                marker.setPosition(place.geometry.location);
+                marker.setVisible(true); // Show the marker
+                map.setCenter(place.geometry.location); // Center the map on the selected location
             });
         }
     </script>
