@@ -8,6 +8,7 @@ from django.core.files.base import ContentFile
 
 def index(request):
     form = LocationForm()
+
     return render(request, 'user/index.html', {'form': form})
 
 
@@ -40,18 +41,18 @@ def store_info(request):
 def success(request):
     return render(request,"input/success.html")
 def add_marker(request):
-    locations = Location.objects.all()
+    location = Location.objects.all()
     locations_data = json.dumps([
         {
             'location': loc.location,
             'latitude': loc.latitude,
             'longitude': loc.longitude,
-            'parcel_size': loc.parcel_size,
-            'price_per_acre': loc.price_per_acre,
+            'parcel_size': int(loc.parcel_size),
+            'price_per_acre': int(loc.price_per_acre),
             'micro_market': loc.micro_market,
             'city': loc.city,
             'photo_url': loc.photo.url if loc.photo else ''
-        } for loc in locations
+        } for loc in location
     ])
     return render(request,"input/index2.html",{'location':locations_data})
 def datables(request):
@@ -63,7 +64,7 @@ def broker_form(request,propertyid):
         form=BrokerForm(request.POST,initial={'propertyid':property1})
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('add_course?submitted=True')
+            return redirect("home")
     else:
         form=BrokerForm(request.POST,initial={'propertyid':property1})
         if 'submitted' in request.GET:

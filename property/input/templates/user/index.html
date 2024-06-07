@@ -157,7 +157,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link " href="property-grid.html">Property</a>
+            <a class="nav-link " href="{% url 'all' %}">Property</a>
           </li>
 
           <li class="nav-item">
@@ -296,7 +296,7 @@
                   <span class="bi bi-cart"></span>
                 </div>
                 <div class="card-title-c align-self-center">
-                  <h2 class="title-c">Lifestyle</h2>
+                  <h2 class="title-c">SELL</h2>
                 </div>
               </div>
               <div class="card-body-c">
@@ -320,7 +320,7 @@
                   <span class="bi bi-calendar4-week"></span>
                 </div>
                 <div class="card-title-c align-self-center">
-                  <h2 class="title-c">Loans</h2>
+                  <h2 class="title-c">BUY</h2>
                 </div>
               </div>
               <div class="card-body-c">
@@ -344,7 +344,7 @@
                   <span class="bi bi-card-checklist"></span>
                 </div>
                 <div class="card-title-c align-self-center">
-                  <h2 class="title-c">Sell</h2>
+                  <h2 class="title-c">RENT</h2>
                 </div>
               </div>
               <div class="card-body-c">
@@ -400,7 +400,7 @@
                           <li class="list-group-item">Mirco market: {{ location.micro_market}}</li>
                           <li class="list-group-item">City: {{ location.city }}</li>
                       </ul>
-                      <a href="#" class="btn btn-primary">Click here to enquire</a>
+                      <td><a href="{% url 'enquiry' location.property_id %}" class="btn btn-primary">Click here to enquire</a></td>
                   </div>
               </div>
           </div>
@@ -477,20 +477,19 @@
 }
 
   </style>
+  <!-- End Latest Properties Section -->
 
     <!-- ======= Latest Properties Section ======= -->
-    <!-- <section class="section-property section-t8">
+    <section class="section-property section-t8">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
             <div class="title-wrap d-flex justify-content-between">
               <div class="title-box">
-                <h2 class="title-a">Latest Properties</h2>
+                <h2 class="title-a">Upcoming Properties</h2>
               </div>
               <div class="title-link">
-                <a href="property-grid.html">All Property
-                  <span class="bi bi-chevron-right"></span>
-                </a>
+          
               </div>
             </div>
           </div>
@@ -545,8 +544,8 @@
                   </div>
                 </div>
               </div>
-            </div><!End carousel item -->
-<!-- 
+            </div>
+
             <div class="carousel-item-b swiper-slide">
               <div class="card-box-a card-shadow">
                 <div class="img-box-a">
@@ -593,8 +592,8 @@
                   </div>
                 </div>
               </div>
-            </div> End carousel item -->
-<!-- 
+            </div> 
+
             <div class="carousel-item-b swiper-slide">
               <div class="card-box-a card-shadow">
                 <div class="img-box-a">
@@ -606,8 +605,8 @@
                       <h2 class="card-title-a">
                         <a href="property-single.html">245 Azabu
                           <br /> Nishi Park let</a>
-                      </h2> -->
-                    <!-- </div>
+                      </h2> 
+                 </div>
                     <div class="card-body-a">
                       <div class="price-box d-flex">
                         <span class="price-a">rent | $ 12.000</span>
@@ -641,8 +640,8 @@
                   </div>
                 </div>
               </div>
-            </div><!- End carousel item -->
-<!-- 
+            </div>
+
             <div class="carousel-item-b swiper-slide">
               <div class="card-box-a card-shadow">
                 <div class="img-box-a">
@@ -689,16 +688,16 @@
                   </div>
                 </div>
               </div>
-            </div><!- End carousel item -->
-          <!-- </div> -->
-        <!-- </div> -->
-        <!-- <div class="propery-carousel-pagination carousel-pagination"></div> --> 
-<!-- 
-      </div> -->
+            </div>
+         </div> 
+         </div> 
+       - <div class="propery-carousel-pagination carousel-pagination"></div>
+ 
+      </div> 
     <!-- </section>End Latest Properties Section - -->
 
     <!-- ======= Agents Section ======= -->
-    <section class="section-agents section-t8">
+    <!-- <section class="section-agents section-t8">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -886,7 +885,7 @@
           </div>
         </div>
       </div>
-    </section><!-- End Agents Section -->
+    </section>End Agents Section -->
 
     <!-- ======= Latest News Section ======= -->
     <section class="section-news section-t8">
@@ -1199,7 +1198,7 @@
                 <a href="#">About</a>
               </li>
               <li class="list-inline-item">
-                <a href="#">Property</a>
+                <a href="admin1/allproperty">Property</a>
               </li>
               <li class="list-inline-item">
                 <a href="#">Blog</a>

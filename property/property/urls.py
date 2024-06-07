@@ -7,4 +7,7 @@ urlpatterns = [
     path('input/', include('input.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('user/', include('user.urls')),
+    path('admin1/', include('admin1.urls')),
+     path('visualize/', include('visualization.urls'))
+    
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

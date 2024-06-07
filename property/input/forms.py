@@ -6,7 +6,7 @@ class LocationForm(forms.ModelForm):
 
     class Meta:
         model = Location
-        fields = ['location', 'latitude', 'longitude', 'parcel_size', 'price_per_acre', 'micro_market', 'city','property_id']
+        fields = ['location', 'latitude', 'longitude', 'parcel_size', 'price_per_acre', 'micro_market', 'city','property_id','date']
         widgets = {
             'latitude': forms.HiddenInput(),
             'longitude': forms.HiddenInput(),

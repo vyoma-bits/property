@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-
-# Create your views here.
+from input.models import Location
 def index(request):
+
     return render(request,"dashboard/graphs.html")

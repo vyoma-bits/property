@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from input.models import Location
+from .forms import enquiryForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -21,7 +22,7 @@ def loginc(request):
 
             # Pass the username to the redirected view using a context variable
 
-            return redirect("display")
+            return redirect("home")
 
 
 
@@ -30,5 +31,24 @@ def loginc(request):
         else:
             return HttpResponse ("Username or Password is incorrect!!!")
     return render (request,'user/loginc.html')
+def logout1(request):
+    logout(request)
+    return redirect("index")
+def enquiry(request,propertyid):
+    property1=Location.objects.get(property_id=propertyid)
+    submitted=False
+
+    if request.method == "POST":
+        form=enquiryForm(request.POST,initial={'propertyid':property1})
+        if form.is_valid():
+            form.save()
+            return redirect("home2")
+    else:
+        form=enquiryForm(request.POST,initial={'propertyid':property1})
+        if 'submitted' in request.GET:
+            submitted=request.GET.get('submitted')
+    return render(request,'input/enquiry_Form.html',{'form':form,'submitted':submitted})
+
+
 
 

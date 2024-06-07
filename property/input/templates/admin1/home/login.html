@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps with Property Details</title>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApzJqEbnR283RJ-My5hO5zGRfqw1gpABw&libraries=places"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #content {
+            max-width: 80%;
+            padding: 20px;
+            background-color: #333;
+            margin: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        #map-container {
+            width: 300px;
+            height: 300px;
+            margin: 20px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .property {
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .property img {
+            max-width: 100%;
+            height: auto;
+        }
+        .property:hover {
+            background-color: #444;
+        }
+        .active-property {
+            border: 2px solid #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>Property Details</h1>
+      
+        <div id="property-details"></div>
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+        <div id="property-details"></div>
+    </div>
+    
+    <script>
+        function initMap() {
+            const locations = JSON.parse('{{ location|escapejs }}');
+            const mapOptions = {
+                zoom: 4,
+                center: { lat: 28.64, lng: 77.2 },
+            };
+            const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+          
+            const markers = [];
+
+            locations.forEach(function(location, index) {
+                const loc = { lat: location.latitude, lng: location.longitude };
+                const marker = new google.maps.Marker({
+                    position: loc,
+                    map: map,
+                    title: location.location
+                });
+                markers.push(marker);
+
+                marker.addListener('click', function() {
+                    displayPropertyDetails(location);
+                    highlightProperty(index);
+                });
+            });
+       
+
+            displayAllProperties(locations);
+        }
+
+        function displayAllProperties(locations) {
+            const detailsDiv = document.getElementById('property-details');
+            detailsDiv.innerHTML = locations.map((location, index) => `
+                <div class="property" data-index="${index}">
+                    <h2>${location.location}</h2>
+                    <p>Parcel Size: ${location.parcel_size}</p>
+                    <p>Price Per Acre: ${location.price_per_acre}</p>
+                    <p>Micro Market: ${location.micro_market}</p>
+                    <p>City: ${location.city}</p>
+                    ${location.photo_url ? `<img src="${location.photo_url}" alt="${location.location}">` : ''}
+                </div>
+            `).join('');
+        }
+
+        function displayPropertyDetails(location) {
+            const detailsDiv = document.getElementById('property-details');
+            detailsDiv.innerHTML = `
+                <div class="property active-property">
+                    <h2>${location.location}</h2>
+                    <p>Parcel Size: ${location.parcel_size}</p>
+                    <p>Price Per Acre: ${location.price_per_acre}</p>
+                    <p>Micro Market: ${location.micro_market}</p>
+                    <p>City: ${location.city}</p>
+                    ${location.photo_url ? `<img src="${location.photo_url}" alt="${location.location}">` : ''}
+                </div>
+            `;
+            
+        }
+
+        function highlightProperty(index) {
+            const properties = document.querySelectorAll('.property');
+            properties.forEach(property => property.classList.remove('active-property'));
+            properties[index].classList.add('active-property');
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            initMap();
+        });
+
+        document.getElementById('property-details').addEventListener('click', function(e) {
+            if (e.target.closest('.property')) {
+                const index = e.target.closest('.property').dataset.index;
+                const locations = JSON.parse('{{ locations_data|escapejs }}');
+                displayPropertyDetails(locations[index]);
+                highlightProperty(index);
+            }
+        });
+       
+    </script>
+</body>
+</html>

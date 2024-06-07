@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Property List</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApzJqEbnR283RJ-My5hO5zGRfqw1gpABw"></script>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Property List</h1>
+    <form method="get">
+        {{ filter.form.as_p }}
+        <label for="parcel_size_gt">Parcel Size Greater Than:</label>
+        <input id="parcel_size_gt" type="number" name="parcel_size_gt" value="{{ request.GET.parcel_size_gt }}">
+        <label for="parcel_size_lt">Parcel Size Less Than:</label>
+        <input id="parcel_size_lt" type="number" name="parcel_size_lt" value="{{ request.GET.parcel_size_lt }}">
+        <br>
+        <label for="price_per_acre_gt">Price per Acre Greater Than:</label>
+        <input id="price_per_acre_gt" type="number" name="price_per_acre_gt" value="{{ request.GET.price_per_acre_gt }}">
+        <label for="price_per_acre_lt">Price per Acre Less Than:</label>
+        <input id="price_per_acre_lt" type="number" name="price_per_acre_lt" value="{{ request.GET.price_per_acre_lt }}">
+        <br>
+        <button type="submit">Apply Filters</button>
+    </form>
+    <div id="map"></div>
+    <ul>
+        {% for property in filter.qs %}
+            <li>{{ property.location }} - {{ property.city }}</li>
+        {% endfor %}
+    </ul>
+    <script>
+        var properties = JSON.parse('{{ properties_json|escapejs }}');
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
+                center: { lat: -34.397, lng: 150.644 }
+            });
+
+            var geocoder = new google.maps.Geocoder();
+
+            properties.forEach(function(property) {
+                geocoder.geocode({ address: property.location + ', ' + property.city }, function(results, status) {
+                    if (status === 'OK') {
+                        new google.maps.Marker({
+                            position: results[0].geometry.location,
+                            map: map,
+                            title: property.location
+                        });
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+            });
+        }
+        initMap();
+    </script>
+</body>
+</html>

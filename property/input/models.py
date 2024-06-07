@@ -5,11 +5,13 @@ class Location(models.Model):
     location = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    parcel_size = models.CharField(max_length=255)
-    price_per_acre = models.CharField(max_length=255)
+    parcel_size = models.DecimalField(max_digits=10, decimal_places=2)
+    price_per_acre = models.DecimalField(max_digits=10, decimal_places=2)
     micro_market = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     photo = models.ImageField(upload_to='photos/', null=True, blank=True)
+    total_visits=models.IntegerField(default=0)
+    date = models.DateField()
 
     # New field for total price calculation
     total_price = models.FloatField(blank=True, null=True)

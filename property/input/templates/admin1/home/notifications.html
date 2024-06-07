@@ -1,0 +1,50 @@
+
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block title %} Notifications {% endblock %} 
+<link href="{% static '/assests/css/black-dashboard.css' %}" rel="stylesheet"/>
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+   
+      {% for property in properties %}
+      <div class="col-lg-4 col-md-6">
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">{{ property.location }}</h5>
+                  <p class="card-text">
+                      <strong>Latitude:</strong> {{ property.latitude }}<br>
+                      <strong>Longitude:</strong> {{ property.longitude }}<br>
+                      <strong>Parcel Size:</strong> {{ property.parcel_size }}<br>
+                      <strong>Price per Acre:</strong> {{ property.price_per_acre }}<br>
+                      <strong>Micro Market:</strong> {{ property.micro_market }}<br>
+                      <strong>City:</strong> {{ property.city }}<br>
+                      <strong>Total Visits:</strong> {{ property.total_visits }}
+                  </p>
+                  <a href="{% url 'property' property.property_id  %}" class="btn btn-primary">Click here to know more</a>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+</div>
+<style>
+  .card {
+      margin: 23px;
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+      border: 1px solid #ddd;
+      border-radius: 5px;
+  }
+  .container-custom {
+      margin-left: 30px; /* Adjust this value as needed */
+  }
+</style>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
