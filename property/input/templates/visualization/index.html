@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Property Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+
+
+    <style>
+        .chart-container {
+            width: 45%;
+            margin: 5px;
+            float: left;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="downloadAllCharts()">Download All Charts</button>
+    <div class="chart-container">
+        <h2>Properties by City</h2>
+        <canvas id="propertyChart" width="400" height="200"></canvas>
+        <button onclick="exportChart('propertyChart', 'propertyChart')">Export as PDF</button>
+        <button onclick="exportChart('propertyChart', 'propertyChart', 'jpeg')">Export as JPEG</button>
+    </div>
+    
+    <div class="chart-container">
+        <h2>Properties by MicroMarket</h2>
+        <canvas id="marketChart" width="400" height="200"></canvas>
+        <button onclick="exportChart('marketChart', 'marketChart')">Export as PDF</button>
+        <button onclick="exportChart('marketChart', 'marketChart', 'jpeg')">Export as JPEG</button>
+    </div>
+    
+    <div class="chart-container">
+        <h2>Average Price per Acre Over Time</h2>
+        <canvas id="priceTrendChart" width="400" height="200"></canvas>
+        <button onclick="exportChart('priceTrendChart', 'priceTrendChart')">Export as PDF</button>
+        <button onclick="exportChart('priceTrendChart', 'priceTrendChart', 'jpeg')">Export as JPEG</button>
+    </div>
+    
+    <div class="chart-container">
+        <h2>Parcel Size vs Price per Acre</h2>
+        <canvas id="scatterPlot" width="400" height="200"></canvas>
+        <button onclick="exportChart('scatterPlot', 'scatterPlot')">Export as PDF</button>
+        <button onclick="exportChart('scatterPlot', 'scatterPlot', 'jpeg')">Export as JPEG</button>
+    </div>
+    
+    <div class="chart-container">
+        <h2>Distribution of Property Sizes</h2>
+        <canvas id="histogramChart" width="400" height="200"></canvas>
+        <button onclick="exportChart('histogramChart', 'histogramChart')">Export as PDF</button>
+        <button onclick="exportChart('histogramChart', 'histogramChart', 'jpeg')">Export as JPEG</button>
+        <button onclick="exportData()">Export as XLSX</button>
+    </div>
+    
+    <script>
+            var cities = JSON.parse('{{ cities|escapejs }}');
+        var propertyCounts = JSON.parse('{{ property_counts|escapejs }}');
+        var microMarkets = JSON.parse('{{ micro_markets|escapejs }}');
+        var marketCounts = JSON.parse('{{ market_counts|escapejs }}');
+        var dates = JSON.parse('{{ dates|escapejs }}');
+        var avgPrices = JSON.parse('{{ avg_prices|escapejs }}');
+        var parcelSizes = JSON.parse('{{ parcel_sizes|escapejs }}');
+        var pricesPerAcre = JSON.parse('{{ prices_per_acre|escapejs }}');
+        var propertySizes = JSON.parse('{{ property_sizes|escapejs }}');
+
+        // Bar Chart
+        var ctx = document.getElementById('propertyChart').getContext('2d');
+        var propertyChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: cities,
+                datasets: [{
+                    label: 'Number of Properties',
+                    data: propertyCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Pie Chart
+        var ctx2 = document.getElementById('marketChart').getContext('2d');
+        var marketChart = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: microMarkets,
+                datasets: [{
+                    label: 'Number of Properties',
+                    data: marketCounts,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Line Graph
+        var ctx3 = document.getElementById('priceTrendChart').getContext('2d');
+        var priceTrendChart = new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Average Price per Acre',
+                    data: avgPrices,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Scatter Plot
+        var ctx4 = document.getElementById('scatterPlot').getContext('2d');
+        var scatterData = parcelSizes.map((size, index) => ({
+            x: size,
+            y: pricesPerAcre[index]
+        }));
+        var scatterPlot = new Chart(ctx4, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Parcel Size vs Price per Acre',
+                    data: scatterData,
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Parcel Size (Acres)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Price per Acre'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Histogram
+        var ctx5 = document.getElementById('histogramChart').getContext('2d');
+        var histogramData = propertySizes.reduce((acc, size) => {
+            acc[size] = (acc[size] || 0) + 1;
+            return acc;
+        }, {});
+        var histogramLabels = Object.keys(histogramData);
+        var histogramCounts = Object.values(histogramData);
+        var histogramChart = new Chart(ctx5, {
+            type: 'bar',
+            data: {
+                labels: histogramLabels,
+                datasets: [{
+                    label: 'Distribution of Property Sizes',
+                    data: histogramCounts,
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        function downloadAllCharts() {
+            var charts = document.querySelectorAll('.chart-container canvas');
+            var zip = new JSZip();
+
+            charts.forEach(function (chart, index) {
+                var imgData = chart.toDataURL('image/png');
+                zip.file('chart_' + index + '.png', imgData.split('base64,')[1], { base64: true });
+            });
+
+            zip.generateAsync({ type: 'blob' }).then(function (content) {
+                saveAs(content, 'charts.zip');
+            });
+        }
+
+        function exportChart(chartId, filename, format = 'pdf') {
+            var canvas = document.getElementById(chartId);
+            var imgData = canvas.toDataURL(format == 'jpeg' ? 'image/jpeg' : 'image/png');
+
+            var a = document.createElement('a');
+            a.href = imgData;
+            a.download = `${filename}.${format}`;
+            a.click();
+        }
+
+        function exportData() {
+            var data = [
+                ['Parcel Size', 'Price per Acre'],
+                [10, 1000],
+                [15, 1500],
+                [20, 2000],
+                [25, 2500],
+                [30, 3000]
+            ];
+            var ws = XLSX.utils.aoa_to_sheet(data);
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Property Data');
+            XLSX.writeFile(wb, 'property_data.xlsx');
+        }
+    </script>
+</body>
+</html>

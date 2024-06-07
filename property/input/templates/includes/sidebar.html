@@ -1,0 +1,75 @@
+
+    <div class="sidebar">
+        <!--
+          Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+      -->
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="javascript:void(0)" class="simple-text logo-mini">
+                  
+                </a>
+                <a href="javascript:void(0)" >
+                    +nineone
+                </a>
+            </div>
+            <ul class="nav">
+                <li class="{% if 'index' in segment %} active {% endif %} ">
+                    <a href="/admin1/dashboard">
+                        <i class="tim-icons icon-chart-pie-36"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="{% if 'icons' in segment %} active {% endif %}">
+                    <a href="/input/store_info">
+                        <i class="tim-icons icon-atom"></i>
+                        <p>Add Property</p>
+                    </a>
+                </li>
+                <li class="{% if 'map' in segment %} active {% endif %}">
+                    <a href="/admin1/allproperty">
+                        <i class="tim-icons icon-pin"></i>
+                        <p>All properties</p>
+                    </a>
+                </li>
+                <li class="{% if 'map' in segment %} active {% endif %}">
+                    <a href="/input/marker">
+                        <i class="tim-icons icon-pin"></i>
+                        <p>Manage Properties</p>
+                    </a>
+                </li>
+                <li class="{% if 'map' in segment %} active {% endif %}">
+                    <a href="/visualize">
+                        <i class="tim-icons icon-pin"></i>
+                        <p>Data</p>
+                    </a>
+                </li>
+                <li class="{% if 'notifications' in segment %} active {% endif %}">
+                    <a href="/admin1/enquiries">
+                        <i class="tim-icons icon-bell-55"></i>
+                        <p>Enquiries</p>
+                    </a>
+                </li>
+                <li class="{% if 'user' in segment %} active {% endif %}">
+                    <a href="/admin1/user">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                <li class="{% if 'tables' in segment %} active {% endif %}">
+                    <a href="/admin1/brokers">
+                        <i class="tim-icons icon-puzzle-10"></i>
+                        <p>Broker list</p>
+                    </a>
+                </li>
+                <li class="{% if 'typography' in segment %} active {% endif %}">
+                    <a href="/user/logout">
+                        <i class="tim-icons icon-align-center"></i>
+                        <p>Logout</p>
+                    </a>
+                </li>
+                <li>
+         
+                </li>
+            </ul>
+        </div>
+    </div>

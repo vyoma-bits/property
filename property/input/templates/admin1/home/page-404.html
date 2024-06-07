@@ -1,0 +1,61 @@
+{% extends "layouts/base.html" %}
+{%load static %}
+{% block title %} Error 404 {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  
+
+
+<link href="{% static '/assests/css/black-dashboard.css' %}" rel="stylesheet"/>
+<!-- Specific Page CSS goes HERE  -->
+
+<H1> ALL BROKERS</H1>
+
+<div class="container">
+  <div class="row">
+
+      {% for property in brokers %}
+      <div class="col-lg-4 col-md-6">
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">{{ property.property_id }}</h5>
+                  <p class="card-text">
+                      <strong>Name:</strong> {{ property.name }}<br>
+                      <strong>email:</strong> {{ property.email }}<br>
+                      <strong>Phone Number:</strong> {{ property.phone }}<br>
+                      <strong>% commission:</strong> {{ property.percentage_of_commission }} %<br>
+                      
+                  </p>
+                  
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+</div>
+<style>
+  .card {
+      margin: 23px;
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+      border: 1px solid #ddd;
+      border-radius: 5px;
+  }
+  .container-custom {
+      margin-left: 30px; /* Adjust this value as needed */
+  }
+  h1 {
+            text-align: center;
+        }
+</style>
+
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

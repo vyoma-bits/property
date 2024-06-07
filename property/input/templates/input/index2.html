@@ -12,19 +12,33 @@
             font-family: Arial, sans-serif;
         }
         #map {
-            flex: 2;
+            flex: 1;
             height: 100vh;
+        }
+        #properties-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        #filter-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
         #property-details {
             flex: 1;
-            padding: 20px;
             overflow-y: auto;
             background-color: #f8f8f8;
             border-left: 1px solid #ddd;
+            padding: 10px;
         }
         .property {
             margin-bottom: 20px;
             cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #fff;
         }
         .property img {
             max-width: 100%;
@@ -40,20 +54,46 @@
 </head>
 <body>
     <div id="map"></div>
-    <div id="property-details"></div>
+    <div id="properties-container">
+        <div id="filter-container">
+            <label for="city-filter">City:</label>
+            <select id="city-filter">
+                <option value="">All</option>
+            </select>
+            <label for="parcel-size-filter">Parcel Size:</label>
+            <select id="parcel-size-filter">
+                <option value="">All</option>
+                <option value="<20"><20 acres</option>
+                <option value="20-50">20-50 acres</option>
+                <option value=">50">>50 acres</option>
+            </select>
+            <label for="price-per-acre-filter">Price Per Acre:</label>
+            <select id="price-per-acre-filter">
+                <option value="">All</option>
+                <option value="<100"><$100</option>
+                <option value="100-200">$100-$200</option>
+                <option value=">200">>$200</option>
+            </select>
+            <button onclick="filterLocations()">Apply Filters</button>
+            <button onclick="resetFilters()">Reset Filters</button>
+        </div>
+        <div id="property-details"></div>
+    </div>
     
     <script>
+        let map;
+        let markers = [];
+
         function initMap() {
             const mapOptions = {
                 zoom: 4,
                 center: { lat: -25.363, lng: 131.044 },
             };
-            const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+            map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
             const locations = JSON.parse('{{ location|escapejs }}');
-            const markers = [];
 
-            locations.forEach(function(location, index) {
+            locations.forEach((location, index) => {
                 const loc = { lat: location.latitude, lng: location.longitude };
                 const marker = new google.maps.Marker({
                     position: loc,
@@ -63,9 +103,20 @@
                 markers.push(marker);
 
                 marker.addListener('click', function() {
-                    displayPropertyDetails(location);
+                    displayPropertyDetails(location, index);
                     highlightProperty(index);
                 });
+            });
+
+            // Populate city filter options
+            const cityFilter = document.getElementById('city-filter');
+            const cities = locations.map(location => location.city);
+            const uniqueCities = [...new Set(cities)]; // Get unique cities
+            uniqueCities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                cityFilter.appendChild(option);
             });
 
             displayAllProperties(locations);
@@ -73,7 +124,16 @@
 
         function displayAllProperties(locations) {
             const detailsDiv = document.getElementById('property-details');
-            detailsDiv.innerHTML = locations.map((location, index) => `
+            const cityFilter = document.getElementById('city-filter').value;
+            const parcelSizeFilter = document.getElementById('parcel-size-filter').value;
+            const pricePerAcreFilter = document.getElementById('price-per-acre-filter').value;
+            
+            const filteredLocations = locations.filter(location => {
+                return (cityFilter === '' || location.city === cityFilter) &&
+                       (parcelSizeFilter === '' || checkParcelSize(location.parcel_size, parcelSizeFilter)) &&
+                       (pricePerAcreFilter === '' || checkPricePerAcre(location.price_per_acre, pricePerAcreFilter));
+            });
+            detailsDiv.innerHTML = filteredLocations.map((location, index) => `
                 <div class="property" data-index="${index}">
                     <h2>${location.location}</h2>
                     <p>Parcel Size: ${location.parcel_size}</p>
@@ -83,9 +143,15 @@
                     ${location.photo_url ? `<img src="${location.photo_url}" alt="${location.location}">` : ''}
                 </div>
             `).join('');
+            markers.forEach(marker => marker.setMap(null));
+
+            // Show markers for filtered locations
+            filteredLocations.forEach((location, index) => {
+                markers[index].setMap(map);
+            });
         }
 
-        function displayPropertyDetails(location) {
+        function displayPropertyDetails(location, index) {
             const detailsDiv = document.getElementById('property-details');
             detailsDiv.innerHTML = `
                 <div class="property active-property">
@@ -105,6 +171,42 @@
             properties[index].classList.add('active-property');
         }
 
+        function checkParcelSize(actualSize, filter) {
+            const size = parseFloat(actualSize);
+            if (filter === '<20') {
+                return size < 20;
+            } else if (filter === '20-50') {
+                return size >= 20 && size <= 50;
+            } else if (filter === '>50') {
+                return size > 50;
+            }
+            return false;
+        }
+
+        function checkPricePerAcre(actualPrice, filter) {
+            const price = parseFloat(actualPrice);
+            if (filter === '<100') {
+                return price < 100;
+            } else if (filter === '100-200') {
+                return price >= 100 && price <= 200;
+            } else if (filter === '>200') {
+                return price > 200;
+            }
+            return false;
+        }
+
+        function filterLocations() {
+            const locations = JSON.parse('{{ location|escapejs }}');
+            displayAllProperties(locations);
+        }
+
+        function resetFilters() {
+            document.getElementById('city-filter').value = '';
+            document.getElementById('parcel-size-filter').value = '';
+            document.getElementById('price-per-acre-filter').value = '';
+            filterLocations();
+        }
+
         document.addEventListener('DOMContentLoaded', (event) => {
             initMap();
         });
@@ -113,10 +215,11 @@
             if (e.target.closest('.property')) {
                 const index = e.target.closest('.property').dataset.index;
                 const locations = JSON.parse('{{ locations_data|escapejs }}');
-                displayPropertyDetails(locations[index]);
+                displayPropertyDetails(locations[index], index);
                 highlightProperty(index);
             }
         });
     </script>
 </body>
 </html>
+

@@ -1,0 +1,142 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{%block content %}
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+</head>
+<div class="d-flex">
+    {%include 'layouts/sidebar.html'%}
+    <div class="w-100">{%include 'layouts/header.html'%}
+   <div class="my-3 mx-3">
+    DASHBAORD
+    <div class="d-flex">
+
+        <div class="col-3 card mx-3">
+            <div class="card-body">
+              <h5 class="card-title text-primary">Market Rent per SF</h5>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Yearly</h6>
+                <div>
+                  <canvas id="Maket-rent-chart"></canvas>
+                </div>
+                <button class="btn btn-primary maximize-btn" data-chart="market-rent-chart">Maximize</button>
+                <h1 class="card-text text-end">5,000,008</h1>
+
+              </div>
+            </div>
+            </div>
+          
+    
+          <div class="col-3 card mx-3">
+            <div class="card-body">
+              <h5 class="card-title text-primary">MARKET RENT GROWTH</h5>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Yearly</h6>
+                <div>
+                  <canvas id="market-rent-growth-chart"></canvas>
+                </div>
+                <button class="btn btn-primary maximize-btn" data-chart="market-rent-growth-chart">Maximize</button>
+                <h1 class="card-text text-end">5,000,008</h1>
+              </div>
+            </div>
+            </div>
+    
+     
+    
+            <div class="col-3 card mx-3">
+                <div class="card-body">
+                  <h5 class="card-title text-primary">MARKET RENT AND ASKING RENT PER SF </h5>
+                  <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Yearly</h6>
+                    <div>
+                      <canvas id="market-asking-rent-chart"></canvas>
+                    </div>
+                    <button class="btn btn-primary maximize-btn" data-chart="market-asking-rent-chart">Maximize</button>
+                    <h1 class="card-text text-end">5,000,008</h1>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-3 card mx-3">
+                <div class="card-body">
+                  <h5 class="card-title text-primary">Asking rent per SF </h5>
+                  <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Yearly</h6>
+                    <div>
+                      <canvas id="asking-rent-chart"></canvas>
+                    </div>
+                    <button class="btn btn-primary maximize-btn" data-chart="asking-rent-chart">Maximize</button>
+                    <h1 class="card-text text-end">5,000,008</h1>
+                  </div>
+                </div>
+
+              </div>
+
+            
+
+    
+          </div>
+
+      </div>
+      <div id="chartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <canvas id="full-screen-chart"></canvas>
+        </div>
+           <!-- Adding datatable-->
+           <div>
+            <table id="mytable"></table>
+          </div>
+
+    </div>
+    
+   </div>
+
+   
+
+
+</div>
+</div>
+<style>
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+</style>
+{%endblock content%}
+{%block scripts%}
+<script src="{% static '/assests/js/index.js' %}" ></script>
+{%endblock scripts%}
